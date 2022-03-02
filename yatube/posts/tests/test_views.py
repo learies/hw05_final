@@ -84,10 +84,11 @@ class PostViewsTests(TestCase):
                 response = self.authorized_client.get(reverse_name)
                 self.assertTemplateUsed(response, template)
 
-    def test_page_show_correct_context(self):
+    def test_post_create_show_correct_context(self):
         response = self.authorized_client.get(reverse(POST_CREATE))
         form_fields = {
             'text': forms.fields.CharField,
+            'group': forms.ChoiceField,
             'image': forms.fields.ImageField,
         }
         for value, expected in form_fields.items():
