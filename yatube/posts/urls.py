@@ -8,6 +8,9 @@ from posts.views import (
     post_create,
     post_edit,
     add_comment,
+    follow_index,
+    profile_follow,
+    profile_unfollow,
 )
 
 app_name = 'posts'
@@ -20,4 +23,15 @@ urlpatterns = [
     path('create/', post_create, name='post_create'),
     path('posts/<post_id>/edit/', post_edit, name='post_edit'),
     path('posts/<int:post_id>/comment/', add_comment, name='add_comment'),
+    path('follow/', follow_index, name='follow_index'),
+    path(
+        'profile/<str:username>/follow/',
+        profile_follow,
+        name='profile_follow',
+    ),
+    path(
+        'profile/<str:username>/unfollow/',
+        profile_unfollow,
+        name='profile_unfollow',
+    ),
 ]

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Последние обновления. Подписки.{% endblock %}
+{% block content %}
+<div class="container">
+  {% include 'posts/includes/switcher.html' %}
+  {% if page_obj|length == 0 %}
+    <h5>У Вас нет избранных авторов.</h5>
+  {% else %}
+  <h1>Последние обновления на сайте</h1>
+  {% for post in page_obj %}
+  <article>
+    <ul>
+      <li>
+        Автор:
+        <a href="{% url 'posts:profile' post.author %}">
+          {{ post.author.get_full_name }}
+        </a>
+      </li>
+      <li>
+        Дата публикации: {{ post.pub_date|date:"d E Y" }}
+      </li>
+    </ul>
+    <p>
+      {{ post.text }}
+    </p>
+    {% if post.group.slug %}
+    <a href="{% url 'posts:group_list' post.group.slug %}">
+      все записи группы: {{ post.group.title }}
+    </a>
+    {% endif %}
+  </article>
+  {% endfor %}
+  {% include 'posts/includes/paginator.html' %}
+</div>
+{% endif %}
+{% endblock %}

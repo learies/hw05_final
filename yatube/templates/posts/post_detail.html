@@ -43,9 +43,11 @@
       <p>
         {{ post.text }}
       </p>
+      {% if is_author %}
       <a class="btn btn-primary" href="{% url 'posts:post_edit' post.pk %}">
         редактировать запись
       </a>
+      {% endif %}
     </article>
     {% load user_filters %}
     {% if user.is_authenticated %}

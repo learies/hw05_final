@@ -4,7 +4,7 @@ from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 
 from posts.forms import PostForm, CommentForm
-from posts.models import Group, Post, User
+from posts.models import Group, Post, User, Follow
 from posts.paginator import get_paginator
 
 
@@ -40,14 +40,20 @@ def group_posts(request, slug):
 
 
 def profile(request, username):
-    user = get_object_or_404(User, username=username)
-    posts = Post.objects.filter(author=user)
+    author = get_object_or_404(User, username=username)
+    user = request.user
+    posts = Post.objects.filter(author=author)
     page_obj = get_paginator(request, posts)
+    if request.user.is_authenticated:
+        following = Follow.objects.filter(user=user, author=author).exists()
+    else:
+        following = False
     context = {
-        'title': f'{user.get_full_name()} профайл пользователя',
-        'author': user,
+        'title': f'{author.get_full_name()} профайл пользователя',
+        'author': author,
         'posts': posts,
         'page_obj': page_obj,
+        'following': following,
     }
     return render(request, 'posts/profile.html', context)
 
@@ -56,12 +62,14 @@ def post_detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     author = User.objects.get(username=post.author.username)
     form = CommentForm(request.POST or None)
+    is_author = request.user == post.author
     context = {
         'title': post.text[:30],
         'post': post,
         'author_posts': Post.objects.filter(author=author),
         'comments': post.comments.all(),
         'form': form,
+        'is_author': is_author,
     }
     return render(request, 'posts/post_detail.html', context)
 
@@ -116,3 +124,44 @@ def add_comment(request, post_id):
         comment.post = post
         comment.save()
     return redirect('posts:post_detail', post_id=post_id)
+
+
+def is_subscribed(user, author):
+    """Функция проверки подписки на автора"""
+    if user.is_authenticated:
+        return Follow.objects.filter(user=user, author=author).exists()
+
+
+@login_required
+def follow_index(request):
+    posts = Post.objects.filter(author__following__user=request.user)
+    page_obj = get_paginator(request, posts)
+    context = {
+        'page_obj': page_obj,
+    }
+    return render(request, 'posts/follow.html', context)
+
+
+@login_required
+def profile_follow(request, username):
+    """Функция создания подписки на выбранного автора"""
+    author = get_object_or_404(User, username=username)
+    if (author != request.user and not Follow.objects.filter(
+        user=request.user, author=author
+    ).exists()):
+        Follow.objects.create(
+            user=request.user,
+            author=author,
+        )
+    return redirect('posts:profile', username=username)
+
+
+@login_required
+def profile_unfollow(request, username):
+    """Функция удаления подписки на выбранного автора"""
+    get_object_or_404(
+        Follow,
+        user=request.user,
+        author__username=username
+    ).delete()
+    return redirect('posts:profile', username=username)
