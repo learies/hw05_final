@@ -25,6 +25,9 @@ POST_DETAIL_TEMPLATE = 'posts/post_detail.html'
 GROUP_LIST = 'posts:group_list'
 GROUP_LIST_TEMPLATE = 'posts/group_list.html'
 
+FOLLOW = 'posts:profile_follow'
+FOLLOW_TEMPLATE = 'posts/follow.html'
+
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 
 PICTURE = SimpleUploadedFile(
