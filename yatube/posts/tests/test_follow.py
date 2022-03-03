@@ -64,3 +64,10 @@ class PostFollowTests(TestCase):
         response = self.authorized_client.get(self.FOLLOW_INDEX)
         context = response.context['page_obj']
         self.assertIn(self.post, context)
+
+    def test_do_not_view_post_unfollowed_users(self):
+        """Посты неотображаются у неподписанных людей"""
+        authorized_client = Client()
+        authorized_client.force_login(self.user_ivan)
+        response_alex = authorized_client.get(self.FOLLOW_INDEX)
+        self.assertNotIn(self.post, response_alex.context['page_obj'])
