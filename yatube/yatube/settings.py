@@ -111,6 +111,6 @@ EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
 
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'posts:index'
-LOGOUT_REDIRECT_URL = 'posts:index'
+# LOGOUT_REDIRECT_URL = 'posts:index'
 
-handler404 = 'core.views.page_not_found'
+CSRF_FAILURE_VIEW = 'core.views.csrf_failure'
