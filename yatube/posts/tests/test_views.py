@@ -21,6 +21,7 @@ from posts.tests.data_test import (
     POST_DETAIL_TEMPLATE,
     GROUP_LIST,
     GROUP_LIST_TEMPLATE,
+    PICTURE,
 )
 
 NUBER_PAGE = 10
@@ -113,3 +114,24 @@ class PostViewsTests(TestCase):
         self.assertEqual(
             response.context.get('post').group.slug, SLUG
         )
+
+    def test_cache_function_in_page_index(self):
+        response_1 = self.guest_client.get(reverse('posts:index'))
+        response_obj_content_1 = response_1.content
+        response_1.context['page_obj'][0].delete()
+        form_data = {
+            'text': POST_TEXT,
+        }
+        self.authorized_client.post(
+            reverse(POST_CREATE),
+            data=form_data,
+            follow=True
+        )
+        response_2 = self.guest_client.get(reverse(INDEX))
+        response_obj_content_2 = response_2.content
+        self.assertEqual(response_obj_content_1, response_obj_content_2)
+        cache.clear()
+        response_3 = self.guest_client.get(reverse(INDEX))
+        response_obj_content_3 = response_3.content
+        self.assertNotEqual(
+            response_obj_content_2, response_obj_content_3)
