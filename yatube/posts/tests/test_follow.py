@@ -21,6 +21,7 @@ class PostFollowTests(TestCase):
             author=cls.user_author,
             text=POST_TEXT,
         )
+        cls.FOLLOW_INDEX = reverse('posts:follow_index')
         cls.FOLLOW = reverse(
             FOLLOW,
             kwargs={'username': cls.user_author},
@@ -53,3 +54,13 @@ class PostFollowTests(TestCase):
             user=self.user_ivan,
             author=self.user_author,
         ).exists())
+
+    def test_view_post_followed_users(self):
+        """Посты отображаются у подписанных людей"""
+        Follow.objects.create(
+            user=self.user_ivan,
+            author=self.user_author,
+        )
+        response = self.authorized_client.get(self.FOLLOW_INDEX)
+        context = response.context['page_obj']
+        self.assertIn(self.post, context)
