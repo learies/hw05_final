@@ -25,6 +25,10 @@ class PostFollowTests(TestCase):
             FOLLOW,
             kwargs={'username': cls.user_author},
         )
+        cls.UNFOLLOW = reverse(
+            'posts:profile_unfollow',
+            kwargs={'username': cls.user_author},
+        )
 
     def setUp(self):
         self.authorized_client = Client()
@@ -34,6 +38,18 @@ class PostFollowTests(TestCase):
         """Проверка подписки на пользователя"""
         self.authorized_client.get(self.FOLLOW_PAGE)
         self.assertTrue(Follow.objects.filter(
+            user=self.user_ivan,
+            author=self.user_author,
+        ).exists())
+
+    def test_unfollow(self):
+        """Проверка отписки от пользователя"""
+        Follow.objects.create(
+            user=self.user_ivan,
+            author=self.user_author,
+        )
+        self.authorized_client.get(self.UNFOLLOW, follow=True)
+        self.assertFalse(Follow.objects.filter(
             user=self.user_ivan,
             author=self.user_author,
         ).exists())
