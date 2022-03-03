@@ -69,5 +69,5 @@ class PostFollowTests(TestCase):
         """Посты неотображаются у неподписанных людей"""
         authorized_client = Client()
         authorized_client.force_login(self.user_ivan)
-        response_alex = authorized_client.get(self.FOLLOW_INDEX)
-        self.assertNotIn(self.post, response_alex.context['page_obj'])
+        response = authorized_client.get(self.FOLLOW_INDEX)
+        self.assertNotIn(self.post, response.context['page_obj'])
