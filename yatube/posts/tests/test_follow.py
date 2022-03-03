@@ -21,7 +21,7 @@ class PostFollowTests(TestCase):
             author=cls.user_author,
             text=POST_TEXT,
         )
-        cls.FOLLOW_PAGE = reverse(
+        cls.FOLLOW = reverse(
             FOLLOW,
             kwargs={'username': cls.user_author},
         )
@@ -36,7 +36,7 @@ class PostFollowTests(TestCase):
 
     def test_follow(self):
         """Проверка подписки на пользователя"""
-        self.authorized_client.get(self.FOLLOW_PAGE)
+        self.authorized_client.get(self.FOLLOW)
         self.assertTrue(Follow.objects.filter(
             user=self.user_ivan,
             author=self.user_author,
