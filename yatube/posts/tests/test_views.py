@@ -21,7 +21,6 @@ from posts.tests.data_test import (
     POST_DETAIL_TEMPLATE,
     GROUP_LIST,
     GROUP_LIST_TEMPLATE,
-    PICTURE,
 )
 
 NUBER_PAGE = 10
@@ -86,7 +85,7 @@ class PostViewsTests(TestCase):
                 self.assertTemplateUsed(response, template)
 
     def test_post_create_show_correct_context(self):
-        response = self.authorized_client.get(reverse(POST_CREATE))
+        response = self.authorized_client.get(self.POST_CREATE_PAGE)
         form_fields = {
             'text': forms.fields.CharField,
             'group': forms.ChoiceField,
@@ -116,22 +115,22 @@ class PostViewsTests(TestCase):
         )
 
     def test_cache_function_in_page_index(self):
-        response_1 = self.guest_client.get(reverse('posts:index'))
+        response_1 = self.guest_client.get(self.INDEX_PAGE)
         response_obj_content_1 = response_1.content
         response_1.context['page_obj'][0].delete()
         form_data = {
             'text': POST_TEXT,
         }
         self.authorized_client.post(
-            reverse(POST_CREATE),
+            self.POST_CREATE_PAGE,
             data=form_data,
             follow=True
         )
-        response_2 = self.guest_client.get(reverse(INDEX))
+        response_2 = self.guest_client.get(self.INDEX_PAGE)
         response_obj_content_2 = response_2.content
         self.assertEqual(response_obj_content_1, response_obj_content_2)
         cache.clear()
-        response_3 = self.guest_client.get(reverse(INDEX))
+        response_3 = self.guest_client.get(self.INDEX_PAGE)
         response_obj_content_3 = response_3.content
         self.assertNotEqual(
             response_obj_content_2, response_obj_content_3)
