@@ -10,11 +10,6 @@ from posts.paginator import get_paginator
 
 @cache_page(20, key_prefix='index_page')
 def index(request):
-    # if 'index_page' in cache:
-    #     posts = cache.get('index_page')
-    # else:
-    #     posts = Post.objects.all()
-    #     cache.set('index_page', posts, 20)
     posts = Post.objects.all()
     page_obj = get_paginator(request, posts)
     context = {
