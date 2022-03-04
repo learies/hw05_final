@@ -32,6 +32,7 @@ class GroupAdmin(admin.ModelAdmin):
         'created',
     )
 
+
 @admin.register(Follow)
 class FollowAdmin(admin.ModelAdmin):
     list_display = (
