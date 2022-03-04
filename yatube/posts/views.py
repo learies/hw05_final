@@ -62,7 +62,6 @@ def post_detail(request, post_id):
         'title': post.text[:30],
         'post': post,
         'author_posts': Post.objects.filter(author=author),
-        'comments': post.comments.all(),
         'form': form,
         'is_author': is_author,
     }
