@@ -24,7 +24,7 @@ class GroupAdmin(admin.ModelAdmin):
 
 
 @admin.register(Comment)
-class GroupAdmin(admin.ModelAdmin):
+class CommentAdmin(admin.ModelAdmin):
     list_display = (
         'text',
         'post',
