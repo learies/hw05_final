@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from posts.models import Post, Group, Comment
+from posts.models import Post, Group, Comment, Follow
 
 
 @admin.register(Post)
@@ -30,4 +30,11 @@ class GroupAdmin(admin.ModelAdmin):
         'post',
         'author',
         'created',
+    )
+
+@admin.register(Follow)
+class FollowAdmin(admin.ModelAdmin):
+    list_display = (
+        'user',
+        'author',
     )

@@ -107,10 +107,16 @@ class Follow(models.Model):
     )
 
     class Meta:
-        constraints = [models.UniqueConstraint(
-            fields=('user', 'author'),
-            name='unique_follow',
-        )]
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'author'],
+                name='unique_followers'
+            ),
+            models.CheckConstraint(
+                check=~models.Q(user=models.F('author')),
+                name='not_sub'
+            ),
+        ]
 
     def __str__(self):
         return f'User:{self.user} following to {self.author}'
