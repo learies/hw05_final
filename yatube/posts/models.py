@@ -94,6 +94,7 @@ class Follow(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='follower',
+        verbose_name='Кто подписывается',
         null=True,
     )
     author = models.ForeignKey(
@@ -101,6 +102,7 @@ class Follow(models.Model):
         on_delete=models.CASCADE,
         unique=False,
         related_name='following',
+        verbose_name='На кого подписываются',
         null=True,
     )
 
