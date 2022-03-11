@@ -56,9 +56,9 @@ class StaticURLTests(TestCase):
             self.EDIT_POST_URL: HTTPStatus.OK,
             self.UNEXISTING_URL: HTTPStatus.NOT_FOUND,
         }
-        for client_url, status_code in client_url_status.items():
-            with self.subTest(client_url=client_url):
-                response = self.authorized_client.get(client_url)
+        for url, status_code in client_url_status.items():
+            with self.subTest(url=url):
+                response = self.authorized_client.get(url)
                 self.assertEqual(response.status_code, status_code)
 
     def test_status_page_for_guest_client(self):
@@ -67,12 +67,13 @@ class StaticURLTests(TestCase):
             self.CREATE_POST_URL: HTTPStatus.FOUND,
             self.EDIT_POST_URL: HTTPStatus.FOUND,
         }
-        for client_url, status_code in client_url_status.items():
-            with self.subTest(client_url=client_url):
-                response = self.guest_client.get(client_url)
+        for url, status_code in client_url_status.items():
+            with self.subTest(url=url):
+                response = self.guest_client.get(url)
                 self.assertEqual(response.status_code, status_code)
 
     def test_urls_uses_correct_template(self):
+        """Проверка доступности шаблона страницы по URL-адресу"""
         templates_url_names = {
             self.INDEX_URL: INDEX_TEMPLATE,
             self.GROUP_URL: GROUP_LIST_TEMPLATE,
@@ -81,8 +82,21 @@ class StaticURLTests(TestCase):
             self.EDIT_POST_URL: POST_CREATE_TEMPLATE,
             self.CREATE_POST_URL: POST_CREATE_TEMPLATE,
         }
-        for address, template in templates_url_names.items():
-            with self.subTest(address=address):
+        for url, template in templates_url_names.items():
+            with self.subTest(url=url):
                 cache.clear()
-                response = self.authorized_client.get(address)
+                response = self.authorized_client.get(url)
                 self.assertTemplateUsed(response, template)
+
+    def test_urls_no_uses_template_for_guest_client(self):
+        """
+        Проверка не доступности шаблона страницы по URL-адресу для
+        не авторизованного клиента.
+        """
+        templates_url_names = {
+            self.CREATE_POST_URL: POST_CREATE_TEMPLATE,
+        }
+        for url, template in templates_url_names.items():
+            with self.subTest(url=url):
+                response = self.guest_client.get(url)
+                self.assertTemplateNotUsed(response, template)
