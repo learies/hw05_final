@@ -32,76 +32,54 @@ class StaticURLTests(TestCase):
             slug=SLUG,
             description=GROUP_DESCRIPTION,
         )
+        cls.INDEX_URL = '/'
+        cls.CREATE_POST_URL = '/create/'
+        cls.EDIT_POST_URL = f'/posts/{cls.post.id}/edit/'
+        cls.POST_DETAIL_URL = f'/posts/{cls.post.id}/'
+        cls.PROFILE_URL = f'/profile/{cls.user}/'
+        cls.GROUP_URL = f'/group/{cls.group.slug}/'
+        cls.UNEXISTING_URL = '/unexisting_page/'
 
     def setUp(self):
         self.guest_client = Client()
         self.authorized_client = Client()
         self.authorized_client.force_login(self.user)
 
-    def test_index_status_page(self):
-        response = self.guest_client.get('/')
-        self.assertEqual(response.status_code, HTTPStatus.OK)
+    def test_status_page_for_authorized_client(self):
+        """Проверка доступности страницы для авторизованного пользователя"""
+        client_url_status = {
+            self.INDEX_URL: HTTPStatus.OK,
+            self.POST_DETAIL_URL: HTTPStatus.OK,
+            self.PROFILE_URL: HTTPStatus.OK,
+            self.GROUP_URL: HTTPStatus.OK,
+            self.CREATE_POST_URL: HTTPStatus.OK,
+            self.EDIT_POST_URL: HTTPStatus.OK,
+            self.UNEXISTING_URL: HTTPStatus.NOT_FOUND,
+        }
+        for client_url, status_code in client_url_status.items():
+            with self.subTest(client_url=client_url):
+                response = self.authorized_client.get(client_url)
+                self.assertEqual(response.status_code, status_code)
 
-    def test_index_status_page_for_authorized(self):
-        response = self.guest_client.get('/')
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-
-    def test_group_slug_status_page(self):
-        response = self.guest_client.get(f'/group/{self.group.slug}/')
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-
-    def test_group_slug_status_page_for_authorized(self):
-        response = self.guest_client.get(f'/group/{self.group.slug}/')
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-
-    def test_profile_username_status_page(self):
-        response = self.guest_client.get(f'/profile/{self.user}/')
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-
-    def test_profile_username_status_page_for_authorized(self):
-        response = self.guest_client.get(f'/profile/{self.user}/')
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-
-    def test_post_id_status_page(self):
-        response = self.guest_client.get(f'/posts/{self.post.id}/')
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-
-    def test_post_id_status_page_for_authorized(self):
-        response = self.guest_client.get(f'/posts/{self.post.id}/')
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-
-    def test_post_edit_status_page(self):
-        response = self.guest_client.get(f'/posts/{self.post.id}/edit/')
-        self.assertEqual(response.status_code, HTTPStatus.FOUND)
-
-    def test_post_edit_status_page_for_authorized(self):
-        response = self.authorized_client.get(f'/posts/{self.post.id}/edit/')
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-
-    def test_post_create_status_page(self):
-        response = self.guest_client.get('/create/')
-        self.assertEqual(response.status_code, HTTPStatus.FOUND)
-
-    def test_post_create_status_page_for_authorized(self):
-        response = self.authorized_client.get('/create/')
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-
-    def test_unexisting_status_page(self):
-        response = self.guest_client.get('/unexisting_page/')
-        self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
-
-    def test_unexisting_status_page(self):
-        response = self.authorized_client.get('/unexisting_page/')
-        self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
+    def test_status_page_for_guest_client(self):
+        """Проверка доступности страницы для не авторизованного пользователя"""
+        client_url_status = {
+            self.CREATE_POST_URL: HTTPStatus.FOUND,
+            self.EDIT_POST_URL: HTTPStatus.FOUND,
+        }
+        for client_url, status_code in client_url_status.items():
+            with self.subTest(client_url=client_url):
+                response = self.guest_client.get(client_url)
+                self.assertEqual(response.status_code, status_code)
 
     def test_urls_uses_correct_template(self):
         templates_url_names = {
-            '/': INDEX_TEMPLATE,
-            f'/group/{self.group.slug}/': GROUP_LIST_TEMPLATE,
-            f'/profile/{self.user}/': PROFILE_TEMPLATE,
-            f'/posts/{self.post.id}/': POST_DETAIL_TEMPLATE,
-            f'/posts/{self.post.id}/edit/': POST_CREATE_TEMPLATE,
-            '/create/': POST_CREATE_TEMPLATE,
+            self.INDEX_URL: INDEX_TEMPLATE,
+            self.GROUP_URL: GROUP_LIST_TEMPLATE,
+            self.PROFILE_URL: PROFILE_TEMPLATE,
+            self.POST_DETAIL_URL: POST_DETAIL_TEMPLATE,
+            self.EDIT_POST_URL: POST_CREATE_TEMPLATE,
+            self.CREATE_POST_URL: POST_CREATE_TEMPLATE,
         }
         for address, template in templates_url_names.items():
             with self.subTest(address=address):
