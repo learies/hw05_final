@@ -15,6 +15,7 @@ from posts.tests.data_test import (
     PROFILE_TEMPLATE,
     POST_DETAIL_TEMPLATE,
     GROUP_LIST_TEMPLATE,
+    TEMPLATE_404,
 )
 
 
@@ -81,6 +82,7 @@ class StaticURLTests(TestCase):
             self.POST_DETAIL_URL: POST_DETAIL_TEMPLATE,
             self.EDIT_POST_URL: POST_CREATE_TEMPLATE,
             self.CREATE_POST_URL: POST_CREATE_TEMPLATE,
+            self.UNEXISTING_URL: TEMPLATE_404,
         }
         for url, template in templates_url_names.items():
             with self.subTest(url=url):
@@ -95,6 +97,7 @@ class StaticURLTests(TestCase):
         """
         templates_url_names = {
             self.CREATE_POST_URL: POST_CREATE_TEMPLATE,
+            self.EDIT_POST_URL: POST_CREATE_TEMPLATE,
         }
         for url, template in templates_url_names.items():
             with self.subTest(url=url):
