@@ -12,9 +12,9 @@ POST_TEXT = 'Тестовая пост'
 INDEX = 'posts:index'
 INDEX_TEMPLATE = 'posts/index.html'
 
-POST_CREATE = 'posts:post_create'
+CREATE_POST = 'posts:post_create'
 POST_EDIT = 'posts:post_edit'
-POST_CREATE_TEMPLATE = 'posts/create_post.html'
+CREATE_POST_TEMPLATE = 'posts/create_post.html'
 
 PROFILE = 'posts:profile'
 PROFILE_TEMPLATE = 'posts/profile.html'

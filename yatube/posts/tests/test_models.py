@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from posts.models import Group, Post, User
-from posts.tests.data_test import (
+from posts.tests.data_for_test import (
     AUTHOR,
     SLUG,
     GROUP_TITLE,

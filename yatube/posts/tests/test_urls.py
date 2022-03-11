@@ -4,14 +4,14 @@ from django.core.cache import cache
 from django.test import TestCase, Client
 
 from posts.models import Post, Group, User
-from posts.tests.data_test import (
+from posts.tests.data_for_test import (
     AUTHOR,
     SLUG,
     GROUP_TITLE,
     GROUP_DESCRIPTION,
     POST_TEXT,
     INDEX_TEMPLATE,
-    POST_CREATE_TEMPLATE,
+    CREATE_POST_TEMPLATE,
     PROFILE_TEMPLATE,
     POST_DETAIL_TEMPLATE,
     GROUP_LIST_TEMPLATE,
@@ -35,7 +35,7 @@ class StaticURLTests(TestCase):
         )
         cls.INDEX_URL = '/'
         cls.CREATE_POST_URL = '/create/'
-        cls.EDIT_POST_URL = f'/posts/{cls.post.id}/edit/'
+        cls.POST_EDIT_URL = f'/posts/{cls.post.id}/edit/'
         cls.POST_DETAIL_URL = f'/posts/{cls.post.id}/'
         cls.PROFILE_URL = f'/profile/{cls.user}/'
         cls.GROUP_URL = f'/group/{cls.group.slug}/'
@@ -54,7 +54,7 @@ class StaticURLTests(TestCase):
             self.PROFILE_URL: HTTPStatus.OK,
             self.GROUP_URL: HTTPStatus.OK,
             self.CREATE_POST_URL: HTTPStatus.OK,
-            self.EDIT_POST_URL: HTTPStatus.OK,
+            self.POST_EDIT_URL: HTTPStatus.OK,
             self.UNEXISTING_URL: HTTPStatus.NOT_FOUND,
         }
         for url, status_code in client_url_status.items():
@@ -66,7 +66,7 @@ class StaticURLTests(TestCase):
         """Проверка доступности страницы для не авторизованного пользователя"""
         client_url_status = {
             self.CREATE_POST_URL: HTTPStatus.FOUND,
-            self.EDIT_POST_URL: HTTPStatus.FOUND,
+            self.POST_EDIT_URL: HTTPStatus.FOUND,
         }
         for url, status_code in client_url_status.items():
             with self.subTest(url=url):
@@ -80,8 +80,8 @@ class StaticURLTests(TestCase):
             self.GROUP_URL: GROUP_LIST_TEMPLATE,
             self.PROFILE_URL: PROFILE_TEMPLATE,
             self.POST_DETAIL_URL: POST_DETAIL_TEMPLATE,
-            self.EDIT_POST_URL: POST_CREATE_TEMPLATE,
-            self.CREATE_POST_URL: POST_CREATE_TEMPLATE,
+            self.POST_EDIT_URL: CREATE_POST_TEMPLATE,
+            self.CREATE_POST_URL: CREATE_POST_TEMPLATE,
             self.UNEXISTING_URL: TEMPLATE_404,
         }
         for url, template in templates_url_names.items():
@@ -96,8 +96,8 @@ class StaticURLTests(TestCase):
         не авторизованного клиента.
         """
         templates_url_names = {
-            self.CREATE_POST_URL: POST_CREATE_TEMPLATE,
-            self.EDIT_POST_URL: POST_CREATE_TEMPLATE,
+            self.CREATE_POST_URL: CREATE_POST_TEMPLATE,
+            self.POST_EDIT_URL: CREATE_POST_TEMPLATE,
         }
         for url, template in templates_url_names.items():
             with self.subTest(url=url):

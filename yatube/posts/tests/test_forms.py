@@ -7,13 +7,13 @@ from django.urls import reverse
 
 from posts.models import Post, Group, User
 from posts.forms import PostForm
-from posts.tests.data_test import (
+from posts.tests.data_for_test import (
     AUTHOR,
     SLUG,
     GROUP_TITLE,
     GROUP_DESCRIPTION,
     POST_TEXT,
-    POST_CREATE,
+    CREATE_POST,
     POST_EDIT,
     PROFILE,
     TEMP_MEDIA_ROOT,
@@ -57,7 +57,7 @@ class PostCreateFormTests(TestCase):
             'image': self.post.image,
         }
         response = self.authorized_client.post(
-            reverse(POST_CREATE),
+            reverse(CREATE_POST),
             data=form_data,
             follow=True,
         )

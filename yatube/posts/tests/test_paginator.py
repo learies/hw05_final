@@ -2,7 +2,7 @@ from django.test import Client, TestCase
 from django.urls import reverse
 
 from posts.models import Post, Group, User
-from posts.tests.data_test import (
+from posts.tests.data_for_test import (
     AUTHOR,
     SLUG,
     GROUP_TITLE,

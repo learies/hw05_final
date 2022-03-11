@@ -4,7 +4,7 @@ from django import forms
 from django.core.cache import cache
 
 from posts.models import Post, Group, User
-from posts.tests.data_test import (
+from posts.tests.data_for_test import (
     AUTHOR,
     SLUG,
     GROUP_TITLE,
@@ -12,9 +12,9 @@ from posts.tests.data_test import (
     POST_TEXT,
     INDEX,
     INDEX_TEMPLATE,
-    POST_CREATE,
+    CREATE_POST,
     POST_EDIT,
-    POST_CREATE_TEMPLATE,
+    CREATE_POST_TEMPLATE,
     PROFILE,
     PROFILE_TEMPLATE,
     POST_DETAIL,
@@ -22,8 +22,6 @@ from posts.tests.data_test import (
     GROUP_LIST,
     GROUP_LIST_TEMPLATE,
 )
-
-NUBER_PAGE = 10
 
 
 class PostViewsTests(TestCase):
@@ -61,7 +59,7 @@ class PostViewsTests(TestCase):
             kwargs={'username': cls.user}
         )
         cls.POST_CREATE_PAGE = reverse(
-            POST_CREATE
+            CREATE_POST
         )
 
     def setUp(self):
@@ -70,13 +68,14 @@ class PostViewsTests(TestCase):
         self.authorized_client.force_login(self.user)
 
     def test_pages_uses_correct_template(self):
+        """Проверка доступности шаблона страницы по URLs-адресу"""
         templates_pages_names = {
             self.INDEX_PAGE: INDEX_TEMPLATE,
             self.GROUP_LIST_PAGE: GROUP_LIST_TEMPLATE,
             self.PROFILE_PAGE: PROFILE_TEMPLATE,
             self.POST_DETAIL_PAGE: POST_DETAIL_TEMPLATE,
-            self.POST_EDIT_PAGE: POST_CREATE_TEMPLATE,
-            self.POST_CREATE_PAGE: POST_CREATE_TEMPLATE,
+            self.POST_EDIT_PAGE: CREATE_POST_TEMPLATE,
+            self.POST_CREATE_PAGE: CREATE_POST_TEMPLATE,
         }
         for reverse_name, template in templates_pages_names.items():
             with self.subTest(reverse_name=reverse_name):
