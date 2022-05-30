@@ -1,3 +1,42 @@
-# hw05_final
+# Социальная сеть YaTube
 
-[![CI](https://github.com/yandex-praktikum/hw05_final/actions/workflows/python-app.yml/badge.svg?branch=master)](https://github.com/yandex-praktikum/hw05_final/actions/workflows/python-app.yml)
+##### Доступный функционал:
+
+* Подписки на пользователей.
+* Просмотр, создание, изменение и удаление записей.
+* Просмотр и создание групп.
+* Возможность добавления, редактирования, удаления своих комментариев и просмотр чужих.
+
+
+Подключены пагинация, кеширование, авторизация пользователя.
+Неавторизованному пользователю доступно только чтение.
+Покрытие тестами.
+
+
+## Процесс установки:
+
+Клонируем репозиторий и переходим в него через терминал:
+
+ ```$ git clone https://github.com/linarium/api_final_yatube.git```
+ 
+ ```$ cd api_final_yatube```
+ 
+ Создаем и активируем виртуальное окружение:
+ 
+ ```$ python3 -m venv venv```
+ 
+ ```$ source venv/bin/activate```
+ 
+ Устанавливаем зависимости из файла requirements.txt:
+ 
+ ```$ python3 -m pip install --upgrade pip```
+ 
+ ```$ pip install -r requirements.txt```
+ 
+ Выполняем миграции:
+ 
+ ```$ python3 manage.py migrate```
+ 
+ Запускаем django сервер:
+ 
+ ```$ python3 manage.py runserver```
